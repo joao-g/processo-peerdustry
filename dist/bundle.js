@@ -14,20 +14,53 @@
 /*!**********************!*\
   !*** ./src/index.ts ***!
   \**********************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("\n\n\n//# sourceURL=webpack://peedustry-processo/./src/index.ts?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   TicTacToe: () => (/* binding */ TicTacToe)\n/* harmony export */ });\nclass TicTacToe {\n    constructor() {\n        this.board = [\n            ['', '', ''],\n            ['', '', ''],\n            ['', '', '']\n        ];\n        this.currentPlayer = 'X';\n        this.printBoard();\n        console.log(`Jogador da vez: ${this.currentPlayer}`);\n    }\n    initialize() {\n        document.addEventListener('keydown', (event) => this.handleKeyPress(event));\n    }\n    handleKeyPress(event) {\n        const keyToPosition = {\n            'Q': [0, 0], 'W': [0, 1], 'E': [0, 2],\n            'A': [1, 0], 'S': [1, 1], 'D': [1, 2],\n            'Z': [2, 0], 'X': [2, 1], 'C': [2, 2],\n        };\n        const position = keyToPosition[event.key.toUpperCase()];\n        if (position) {\n            this.play(position[0], position[1]);\n        }\n    }\n    play(row, col) {\n        if (this.board[row][col] !== '') {\n            console.log('Posição já ocupada!');\n            return;\n        }\n        this.board[row][col] = this.currentPlayer;\n        console.log(`Jogada na posição: [${row}, ${col}] pelo jogador ${this.currentPlayer}`);\n        this.printBoard();\n        if (this.checkWin(this.currentPlayer)) {\n            console.log(`Jogador ${this.currentPlayer} venceu!`);\n            this.resetGame();\n            return;\n        }\n        if (this.isBoardFull()) {\n            console.log('Empate!');\n            this.resetGame();\n            return;\n        }\n        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';\n        console.log(`Jogador da vez: ${this.currentPlayer}`);\n    }\n    printBoard() {\n        console.log('Tabuleiro:');\n        this.board.forEach(row => console.log(row.join(' | ')));\n    }\n    checkWin(player) {\n        const winPatterns = [\n            // Linhas\n            [[0, 0], [0, 1], [0, 2]],\n            [[1, 0], [1, 1], [1, 2]],\n            [[2, 0], [2, 1], [2, 2]],\n            // Colunas\n            [[0, 0], [1, 0], [2, 0]],\n            [[0, 1], [1, 1], [2, 1]],\n            [[0, 2], [1, 2], [2, 2]],\n            // Diagonais\n            [[0, 0], [1, 1], [2, 2]],\n            [[0, 2], [1, 1], [2, 0]]\n        ];\n        return winPatterns.some(pattern => pattern.every(([row, col]) => this.board[row][col] === player));\n    }\n    isBoardFull() {\n        return this.board.every(row => row.every(cell => cell !== ''));\n    }\n    resetGame() {\n        this.board = [\n            ['', '', ''],\n            ['', '', ''],\n            ['', '', '']\n        ];\n        this.currentPlayer = 'X';\n        console.log('Jogo reiniciado!');\n        this.printBoard();\n    }\n}\nconst game = new TicTacToe();\ngame.initialize();\n\n\n//# sourceURL=webpack://peedustry-processo/./src/index.ts?");
 
 /***/ })
 
 /******/ 	});
+/************************************************************************/
+/******/ 	// The require scope
+/******/ 	var __webpack_require__ = {};
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /************************************************************************/
 /******/ 	
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module can't be inlined because the eval devtool is used.
 /******/ 	var __webpack_exports__ = {};
-/******/ 	__webpack_modules__["./src/index.ts"]();
+/******/ 	__webpack_modules__["./src/index.ts"](0, __webpack_exports__, __webpack_require__);
 /******/ 	
 /******/ })()
 ;
