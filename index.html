@@ -7,8 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Jogo da Velha</h1>
-    <p>Um jogo da velha desenvolvido com TypeScript e POO</p>
+    <header>    
+        <h1>Jogo da velha</h1>
+        <p>Um jogo da velha desenvolvido com POO e TypeScript</p><br>
+    </header>
+
+    <div class="game-container">
+        <div id="board">
+            <div class="cell" data-row="0" data-col="0">Q</div>
+            <div class="cell" data-row="0" data-col="1">W</div>
+            <div class="cell" data-row="0" data-col="2">E</div>
+            <div class="cell" data-row="1" data-col="0">A</div>
+            <div class="cell" data-row="1" data-col="1">S</div>
+            <div class="cell" data-row="1" data-col="2">D</div>
+            <div class="cell" data-row="2" data-col="0">Z</div>
+            <div class="cell" data-row="2" data-col="1">X</div>
+            <div class="cell" data-row="2" data-col="2">C</div>
+        </div>
+        <button id="resetButton">Reiniciar Jogo</button>
+        <p id="currentPlayer">Jogador da vez: X</p>
+    </div>
+
     <script src="dist/bundle.js"></script>
 </body>
 </html>

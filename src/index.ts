@@ -15,6 +15,10 @@ export class TicTacToe {
 
     initialize() {
         document.addEventListener('keydown', (event) => this.handleKeyPress(event));
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', (event) => this.handleCellClick(event));
+        });
+        document.getElementById('resetButton')?.addEventListener('click', () => this.resetGame());
     }
 
     handleKeyPress(event: KeyboardEvent): void {
@@ -31,6 +35,13 @@ export class TicTacToe {
         }
     }
 
+    handleCellClick(event: Event): void {
+        const target = event.target as HTMLElement;
+        const row = parseInt(target.getAttribute('data-row') || '0', 10);
+        const col = parseInt(target.getAttribute('data-col') || '0', 10);
+        this.play(row, col);
+    }
+
     play(row: number, col: number): void {
         if (this.board[row][col] !== '') {
             console.log('Posição já ocupada!');
@@ -40,24 +51,46 @@ export class TicTacToe {
         this.board[row][col] = this.currentPlayer;
         console.log(`Jogada na posição: [${row}, ${col}] pelo jogador ${this.currentPlayer}`);
         this.printBoard();
+        this.updateBoardUI();
 
         if (this.checkWin(this.currentPlayer)) {
             console.log(`Jogador ${this.currentPlayer} venceu!`);
+            alert(`Jogador ${this.currentPlayer} venceu!`);
             return;
         }
 
         if (this.isBoardFull()) {
             console.log('Empate!');
+            alert('Empate!');
             return;
         }
 
         this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
         console.log(`Jogador da vez: ${this.currentPlayer}`);
+        this.updateCurrentPlayerUI();
     }
     
     printBoard(): void {
         console.log('Tabuleiro:');
         this.board.forEach(row => console.log(row.join(' | ')));
+    }
+
+    updateBoardUI(): void {
+        this.board.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+                const cellElement = document.querySelector(`.cell[data-row='${rowIndex}'][data-col='${colIndex}']`);
+                if (cellElement) {
+                    cellElement.textContent = cell;
+                }
+            });
+        });
+    }
+
+    updateCurrentPlayerUI(): void {
+        const currentPlayerElement = document.getElementById('currentPlayer');
+        if (currentPlayerElement) {
+            currentPlayerElement.textContent = `Jogador da vez: ${this.currentPlayer}`;
+        }
     }
 
     checkWin(player: string): boolean {
@@ -93,6 +126,8 @@ export class TicTacToe {
         this.currentPlayer = 'X';
         console.log('Jogo reiniciado!');
         this.printBoard();
+        this.updateBoardUI();
+        this.updateCurrentPlayerUI();
     }
 }
 
