@@ -1,54 +1,148 @@
-# Documentação do Jogo da Velha (TicTacToe)
+# Documentação do Jogo da Velha
 
-## Descrição
+Esta documentação descreve a implementação de um jogo da velha (Tic-Tac-Toe) usando TypeScript (POO), HTML e CSS. O jogo permite que dois jogadores joguem alternadamente até que um ganhe ou o jogo termine em empate. A interface do usuário é criada com HTML e estilizada com CSS. Também inclui testes unitários utilizando Jest.
 
-Esta documentação descreve a classe `TicTacToe`, uma implementação em TypeScript do clássico jogo da velha, e os testes associados à sua funcionalidade. A classe `TicTacToe` implementa a lógica do jogo, incluindo a manipulação do tabuleiro, alternância de jogadores, verificação de vitórias e empates, e reinicialização do jogo. Os testes garantem que a lógica do jogo está funcionando corretamente.
+![Screenshot do Meu Projeto](interface.png)
 
-## Classe `TicTacToe`
+## Estrutura do Projeto
 
-A classe `TicTacToe` representa o jogo da velha e inclui a lógica para jogar, verificar vitórias, e alternar entre jogadores.
+- `index.html`: Arquivo HTML contendo a estrutura do jogo.
+- `styles.css`: Arquivo CSS para estilizar a interface do jogo.
+- `index.ts`: Arquivo TypeScript contendo a lógica do jogo.
+- `index.test.ts`: Arquivo de teste para o jogo usando Jest.
 
-### Propriedades
+## index.html
 
-- `private board: string[][]` - Representa o tabuleiro do jogo, uma matriz 3x3 de strings que pode conter 'X', 'O', ou uma string vazia para células não ocupadas.
-- `private currentPlayer: string` - Representa o jogador atual, que pode ser 'X' ou 'O'.
+O arquivo `index.html` define a estrutura básica da interface do jogo da velha. 
 
-### Métodos
+### Estrutura do HTML
 
-#### `constructor()`
+- **`<div class="game-container">`**: Contém todo o conteúdo do jogo.
+  - **`<div id="board">`**: Representa o tabuleiro do jogo, composto por 9 células.
+    - **`<div class="cell" data-row="x" data-col="y"></div>`**: Cada célula do tabuleiro é representada por um div com as classes `cell`, e atributos `data-row` e `data-col` que indicam a posição da célula no tabuleiro.
+  - **`<button id="resetButton">Reiniciar Jogo</button>`**: Botão para reiniciar o jogo.
+  - **`<p id="currentPlayer">Jogador da vez: X</p>`**: Parágrafo que exibe o jogador atual.
 
-Inicializa o tabuleiro com células vazias e define o jogador atual como 'X'. Também imprime o tabuleiro e o jogador da vez no console.
+## styles.css
 
-#### `initialize()`
+O arquivo `styles.css` estiliza a interface do jogo, garantindo que o tabuleiro e os elementos do jogo sejam visualmente agradáveis e fáceis de usar.
 
-Configura o jogo para reagir ao pressionamento de teclas, registrando um ouvinte de eventos para `keydown`.
+### Estilos Principais
 
-#### `handleKeyPress(event: KeyboardEvent): void`
+- **Body**: Centraliza o conteúdo da página e define um fundo cinza claro.
+  ```css
+  body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      font-family: Arial, sans-serif;
+  }
+  ```
 
-Maneja eventos de pressionamento de tecla e converte a tecla pressionada em uma posição no tabuleiro, chamando o método `play` para realizar a jogada.
+- **Game Container**: Centraliza o conteúdo do jogo e define o alinhamento do texto.
+  ```css
+  .game-container {
+      text-align: center;
+  }
+  ```
 
-#### `play(row: number, col: number): void`
+- **Board**: Cria uma grade 3x3 com células de 100px de largura e altura, com um espaçamento de 5px entre elas.
+  ```css
+  #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-bottom: 20px;
+  }
+  ```
 
-Executa uma jogada na posição especificada no tabuleiro. Atualiza o tabuleiro com a marca do jogador atual, verifica se há uma vitória ou empate, e alterna para o próximo jogador se o jogo continuar.
+- **Cell**: Define o estilo das células do tabuleiro, incluindo tamanho, centralização do texto, bordas e efeitos de hover.
+  ```css
+  .cell {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2em;
+      background-color: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+  }
 
-#### `printBoard(): void`
+  .cell:hover {
+      background-color: #e0e0e0;
+  }
+  ```
 
-Imprime o estado atual do tabuleiro no console.
+- **Reset Button**: Estiliza o botão de reinício do jogo.
+  ```css
+  #resetButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1em;
+  }
+  ```
 
-#### `checkWin(player: string): boolean`
+## index.ts
 
-Verifica se o jogador especificado ganhou o jogo, verificando linhas, colunas e diagonais para padrões de vitória.
+A classe `TicTacToe` contém a lógica principal do jogo. Ela é responsável por gerenciar o estado do tabuleiro, alternar entre os jogadores, verificar as condições de vitória e empates, e atualizar a interface do usuário.
 
-#### `isBoardFull(): boolean`
+### Métodos Principais
 
-Verifica se o tabuleiro está cheio, indicando um empate se não houver mais células vazias.
+- **`initialize()`**: Inicializa os eventos para teclas e cliques.
+- **`handleKeyPress(event: KeyboardEvent)`**: Lida com eventos de teclas.
+- **`handleCellClick(event: Event)`**: Lida com eventos de cliques nas células.
+- **`play(row: number, col: number)`**: Executa uma jogada.
+- **`checkWin(player: string)`**: Verifica se um jogador venceu.
+- **`isBoardFull()`**: Verifica se o tabuleiro está cheio.
+- **`resetGame()`**: Reinicia o jogo.
 
-#### `resetGame(): void`
+## Testes
 
-Reinicia o tabuleiro e define o jogador atual como 'X', reiniciando o estado do jogo.
+Os testes são escritos usando Jest para garantir que a lógica do jogo funcione corretamente.
 
-# Documentação dos testes
+### index.test.ts
 
-## Descrição
+Os testes em Jest garantem que a funcionalidade do jogo esteja correta, incluindo o comportamento do tabuleiro, alternância de jogadores, detecção de vitórias e empates, e a reinicialização do jogo.
 
-Esta documentação descreve os testes associados à classe `TicTacToe`, implementada em TypeScript. Os testes garantem que a lógica do jogo funciona conforme o esperado, verificando a inicialização, jogadas, alternância de jogadores, detecção de vitórias e empates, e o comportamento ao pressionar teclas.
+### Descrição dos Testes
+
+1. **Deve começar com um tabuleiro vazio**:
+   - Verifica se o tabuleiro inicial está vazio.
+   
+2. **Deve começar com o jogador X**:
+   - Verifica se o jogador inicial é o 'X'.
+   
+3. **Deve colocar uma marca no "tabuleiro"**:
+   - Verifica se uma jogada coloca a marca correta no tabuleiro.
+   
+4. **Deve trocar de jogador após uma jogada**:
+   - Verifica se o jogador atual alterna após uma jogada.
+   
+5. **Verifica se o jogo não permite que um jogador faça uma jogada em um espaço já ocupado**:
+   - Garante que uma célula ocupada não pode ser jogada novamente.
+   
+6. **Deve detectar uma vitória em linha**:
+   - Verifica se o jogo detecta corretamente uma vitória em linha.
+   
+7. **Deve detectar uma vitória em uma coluna**:
+   - Verifica se o jogo detecta corretamente uma vitória em coluna.
+   
+8. **Deve detectar uma vitória em uma diagonal**:
+   - Verifica se o jogo detecta corretamente uma vitória em diagonal.
+   
+9. **Deve detectar um empate**:
+   - Verifica se o jogo detecta corretamente um empate quando o tabuleiro está cheio e ninguém venceu.
+   
+10. **Deveria resetar o jogo**:
+    - Verifica se o jogo reinicia corretamente, limpando o tabuleiro e resetando o jogador atual para 'X'.
+    
+11. **Verifica se o jogo está reagindo corretamente ao pressionamento de uma tecla específica**:
+    - Testa se o jogo processa corretamente uma jogada feita por meio do pressionamento de teclas.
+    
+12. **O jogo está alternando corretamente entre os jogadores "X" e "O" após a pressão de teclas específicas**:
+    - Verifica se o jogo alterna corretamente entre os jogadores quando as jogadas são feitas por meio de teclas.
