@@ -1,96 +1,37 @@
-export class TicTacToe {
+export class Board {
     private board: string[][];
-    private currentPlayer: string;
 
     constructor() {
-        this.board = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ];
-        this.currentPlayer = 'X';
-        this.printBoard();
-        console.log(`Jogador da vez: ${this.currentPlayer}`);
+        this.board = this.createEmptyBoard();
     }
 
-    initialize() {
-        document.addEventListener('keydown', (event) => this.handleKeyPress(event));
-        document.querySelectorAll('.cell').forEach(cell => {
-            cell.addEventListener('click', (event) => this.handleCellClick(event));
-        });
-        document.getElementById('resetButton')?.addEventListener('click', () => this.resetGame());
+    private createEmptyBoard(): string[][] {
+        return [['', '', ''], ['', '', ''], ['', '', '']];
     }
 
-    handleKeyPress(event: KeyboardEvent): void {
-        const keyToPosition: { [key: string]: number[] } = {
-            'Q': [0, 0], 'W': [0, 1], 'E': [0, 2],
-            'A': [1, 0], 'S': [1, 1], 'D': [1, 2],
-            'Z': [2, 0], 'X': [2, 1], 'C': [2, 2],
-        };
+    reset(): void {
+        this.board = this.createEmptyBoard();
+    }
 
-        const position = keyToPosition[event.key.toUpperCase()];
+    getBoard(): string[][] {
+        return this.board;
+    }
 
-        if (position) {
-            this.play(position[0], position[1]);
+    setMove(row: number, col: number, player: string): boolean {
+        if (this.isValidPosition(row, col) && this.board[row][col] === '') {
+            this.board[row][col] = player;
+            return true;
         }
+        return false;
     }
 
-    handleCellClick(event: Event): void {
-        const target = event.target as HTMLElement;
-        const row = parseInt(target.getAttribute('data-row') || '0', 10);
-        const col = parseInt(target.getAttribute('data-col') || '0', 10);
-        this.play(row, col);
+    isFull(): boolean {
+        return this.board.every(row => row.every(cell => cell !== ''));
     }
 
-    play(row: number, col: number): void {
-        if (this.board[row][col] !== '') {
-            console.log('Posição já ocupada!');
-            return;
-        }
-
-        this.board[row][col] = this.currentPlayer;
-        console.log(`Jogada na posição: [${row}, ${col}] pelo jogador ${this.currentPlayer}`);
-        this.printBoard();
-        this.updateBoardUI();
-
-        if (this.checkWin(this.currentPlayer)) {
-            console.log(`Jogador ${this.currentPlayer} venceu!`);
-            alert(`Jogador ${this.currentPlayer} venceu!`);
-            return;
-        }
-
-        if (this.isBoardFull()) {
-            console.log('Empate!');
-            alert('Empate!');
-            return;
-        }
-
-        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
-        console.log(`Jogador da vez: ${this.currentPlayer}`);
-        this.updateCurrentPlayerUI();
-    }
-    
-    printBoard(): void {
+    print(): void {
         console.log('Tabuleiro:');
         this.board.forEach(row => console.log(row.join(' | ')));
-    }
-
-    updateBoardUI(): void {
-        this.board.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-                const cellElement = document.querySelector(`.cell[data-row='${rowIndex}'][data-col='${colIndex}']`);
-                if (cellElement) {
-                    cellElement.textContent = cell;
-                }
-            });
-        });
-    }
-
-    updateCurrentPlayerUI(): void {
-        const currentPlayerElement = document.getElementById('currentPlayer');
-        if (currentPlayerElement) {
-            currentPlayerElement.textContent = `Jogador da vez: ${this.currentPlayer}`;
-        }
     }
 
     checkWin(player: string): boolean {
@@ -113,23 +54,94 @@ export class TicTacToe {
         );
     }
 
-    isBoardFull(): boolean {
-        return this.board.every(row => row.every(cell => cell !== ''));
-    }
-
-    resetGame(): void {
-        this.board = [
-            ['', '', ''],
-            ['', '', ''],
-            ['', '', '']
-        ];
-        this.currentPlayer = 'X';
-        console.log('Jogo reiniciado!');
-        this.printBoard();
-        this.updateBoardUI();
-        this.updateCurrentPlayerUI();
+    private isValidPosition(row: number, col: number): boolean {
+        return row >= 0 && row < 3 && col >= 0 && col < 3;
     }
 }
 
+export class Player {
+    private currentPlayer: string;
+
+    constructor() {
+        this.currentPlayer = 'X';
+    }
+
+    reset(): void {
+        this.currentPlayer = 'X';
+    }
+
+    getCurrentPlayer(): string {
+        return this.currentPlayer;
+    }
+
+    switchPlayer(): void {
+        this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+    }
+}
+
+export class TicTacToe {
+    private board: Board;
+    private player: Player;
+
+    constructor() {
+        this.board = new Board();
+        this.player = new Player();
+        this.initializeKeyboardControls();
+    }
+
+    startGame(): void {
+        this.board.reset();
+        this.player.reset();
+        this.board.print();
+        console.log(`Jogador da vez: ${this.player.getCurrentPlayer()}`);
+    }
+
+    handleMove(row: number, col: number): void {
+        if (!this.board.setMove(row, col, this.player.getCurrentPlayer())) {
+            console.log('Posição já ocupada ou inválida!');
+            return;
+        }
+
+        this.board.print();
+
+        if (this.board.checkWin(this.player.getCurrentPlayer())) {
+            console.log(`Jogador ${this.player.getCurrentPlayer()} venceu!`);
+            console.log('Pressione "R" para reiniciar o jogo.');
+            return;
+        }
+
+        if (this.board.isFull()) {
+            console.log('Empate!');
+            console.log('Pressione "R" para reiniciar o jogo.');
+            return;
+        }
+
+        this.player.switchPlayer();
+        console.log(`Jogador da vez: ${this.player.getCurrentPlayer()}`);
+    }
+
+    private initializeKeyboardControls(): void {
+        const keyToPositionMap: { [key: string]: [number, number] } = {
+            'q': [0, 0], 'w': [0, 1], 'e': [0, 2],
+            'a': [1, 0], 's': [1, 1], 'd': [1, 2],
+            'z': [2, 0], 'x': [2, 1], 'c': [2, 2]
+        };
+
+        document.addEventListener('keydown', (event) => {
+            const key = event.key.toLowerCase();
+            if (key === 'r') {
+                this.startGame();
+                return;
+            }
+
+            const position = keyToPositionMap[key];
+            if (position) {
+                this.handleMove(position[0], position[1]);
+            }
+        });
+    }
+}
+
+// Inicialização
 const game = new TicTacToe();
-game.initialize();
+game.startGame();
