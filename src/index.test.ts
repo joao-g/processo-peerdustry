@@ -1,4 +1,6 @@
-import { TicTacToe, Board, Player } from './index';
+import { TicTacToe } from './tictactoe';
+import { Board } from './board';
+import { Player } from './player';
 
 describe('Testes do Jogo da Velha', () => {
     let game: TicTacToe;
